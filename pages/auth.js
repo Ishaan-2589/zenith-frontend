@@ -39,7 +39,7 @@ export function renderAuth(containerId, onSuccess) {
                         <input type="password" id="login-password" required class="w-full bg-transparent border-b border-[#434842] text-[#e5e2e1] py-2 focus:border-[#B8CCB5] outline-none transition-colors font-sans text-lg">
                     </div>
                     <button type="submit" id="btn-submit-login" class="w-full bg-[#B8CCB5] text-[#131313] py-4 mt-8 text-xs uppercase tracking-[0.2em] font-bold hover:brightness-110 transition-all flex justify-center items-center gap-2">
-                        Enter Vault <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        Enter Vault <span class="material-symbols-outlined text-sm">→</span>
                     </button>
                 </form>
 

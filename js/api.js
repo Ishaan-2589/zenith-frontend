@@ -1,4 +1,8 @@
-const API_BASE_URL = "http://localhost:8080/api";
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+const API_BASE_URL = isLocalhost 
+    ? 'http://localhost:8080/api'                     
+    : 'https://zenith-backend-inch.onrender.com/api';
 
 /**
  * HELPER: getAuthHeaders
@@ -90,6 +94,7 @@ export async function fetchProductByIdAPI(id) {
 
 export async function getCartAPI() {
   if (!localStorage.getItem("token")) return [];
+  if (!token) return [];
 
   const res = await authenticatedFetch(`${API_BASE_URL}/cart`);
 

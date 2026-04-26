@@ -152,6 +152,7 @@
     <main id="view-seller-dashboard" class="view hidden"></main>
     <main id="view-order-success" class="view hidden"></main>
     <main id="view-track-order" class="view hidden"></main>
+    <main id="view-legal" class="view hidden"></main>
 
     <footer
       class="footer"
@@ -174,10 +175,16 @@
           justify-content: center;
         "
       >
-        <a href="#" class="footer-link">Shipping & Returns</a>
-        <a href="#" class="footer-link">Terms of Service</a>
-        <a href="#" class="footer-link">Privacy Policy</a>
-        <a href="#" class="footer-link">Contact</a>
+        <a href="javascript:void(0)" onclick="openLegal('shipping')"
+          >Shipping & Returns</a
+        >
+        <a href="javascript:void(0)" onclick="openLegal('privacy')"
+          >Privacy Policy</a
+        >
+        <a href="javascript:void(0)" onclick="openLegal('terms')"
+          >Terms of Service</a
+        >
+        <a href="javascript:void(0)" onclick="openLegal('contact')">Contact</a>
       </div>
     </footer>
     <script type="module" src="./js/app.js"></script>
@@ -185,4 +192,3 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </body>
 </html>
-  

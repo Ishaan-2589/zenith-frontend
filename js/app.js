@@ -4,19 +4,20 @@ import { renderHome } from "../pages/home.js";
 import { renderProfile, refreshOrderHistory } from "../pages/profile.js";
 import { renderShop } from "../pages/shop.js";
 import { renderAbout } from "../pages/about.js";
-import { initSearch } from "../pages/search.js"; 
-import { renderAdmin, renderAdminAuth } from '../pages/admin.js';
-import { setupSellerDashboard } from '../pages/sellerDashboard.js';
+import { initSearch } from "../pages/search.js";
+import { renderAdmin, renderAdminAuth } from "../pages/admin.js";
+import { setupSellerDashboard } from "../pages/sellerDashboard.js";
 import { renderOrderSuccess } from "../pages/orderSuccess.js";
 import { renderTrackOrder } from "../pages/trackOrder.js";
-import { renderCheckout, populateCheckoutSummary } from "../pages/checkout.js"; 
-import { renderProductDetail } from "../pages/product.js"; 
+import { renderCheckout, populateCheckoutSummary } from "../pages/checkout.js";
+import { renderProductDetail } from "../pages/product.js";
 import {
   removeFromCartAPI,
   addToCartAPI,
   placeOrderAPI,
   getCartAPI,
 } from "./api.js";
+import { renderLegalPages } from "../pages/legal.js";
 
 // ==========================================
 // Main Application Controller
@@ -32,9 +33,10 @@ const views = {
   about: document.getElementById("view-about"),
   adminAuth: document.getElementById("view-admin-auth"),
   admin: document.getElementById("view-admin"),
-  sellerDashboard: document.getElementById("view-seller-dashboard"), // New Dashboard
+  sellerDashboard: document.getElementById("view-seller-dashboard"),
   orderSuccess: document.getElementById("view-order-success"),
   trackOrder: document.getElementById("view-track-order"),
+  legal: document.getElementById("view-legal"),
 };
 
 const navBtns = {
@@ -54,10 +56,10 @@ export function showToast(message, isError = false) {
   toastEl.textContent = message;
 
   if (isError) {
-    toastEl.style.borderColor = "rgba(255, 68, 68, 0.3)"; 
-    toastEl.style.color = "#ffaaaa"; 
+    toastEl.style.borderColor = "rgba(255, 68, 68, 0.3)";
+    toastEl.style.color = "#ffaaaa";
   } else {
-    toastEl.style.borderColor = "var(--accent-primary)"; 
+    toastEl.style.borderColor = "var(--accent-primary)";
     toastEl.style.color = "var(--text-primary)";
   }
 
@@ -107,37 +109,37 @@ export function switchView(viewName, isGoingBack = false) {
 
 // JWT Decoder Helper
 function decodeJWT(token) {
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(window.atob(base64));
-    } catch (e) {
-        return null;
-    }
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(window.atob(base64));
+  } catch (e) {
+    return null;
+  }
 }
 
 function updateNavUI() {
   const token = localStorage.getItem("token");
-  const navDashboardBtn = document.getElementById('nav-dashboard');
-  
+  const navDashboardBtn = document.getElementById("nav-dashboard");
+
   if (token) {
     navBtns.profile.innerText = "Member Profile";
     const userData = decodeJWT(token);
-    
+
     // Show Dashboard link ONLY for Admins
     if (userData && userData.role === "ADMIN" && navDashboardBtn) {
-        navDashboardBtn.classList.remove("hidden");
-        navDashboardBtn.style.display = "inline-block";
+      navDashboardBtn.classList.remove("hidden");
+      navDashboardBtn.style.display = "inline-block";
     } else if (navDashboardBtn) {
-        navDashboardBtn.classList.add("hidden");
-        navDashboardBtn.style.display = "none";
+      navDashboardBtn.classList.add("hidden");
+      navDashboardBtn.style.display = "none";
     }
   } else {
     navBtns.profile.innerText = "Sign In";
     // Hide Dashboard link for logged-out users
     if (navDashboardBtn) {
-        navDashboardBtn.classList.add("hidden");
-        navDashboardBtn.style.display = "none";
+      navDashboardBtn.classList.add("hidden");
+      navDashboardBtn.style.display = "none";
     }
   }
 }
@@ -146,23 +148,23 @@ function updateNavUI() {
 // ==========================================
 export function handleAuthSuccess(message) {
   showToast(message);
-  
+
   // 1. Update the Nav UI first so the Dashboard button appears if needed
-  updateNavUI(); 
-  
+  updateNavUI();
+
   // 2. Decode the token to check the role
   const token = localStorage.getItem("token");
   const userData = decodeJWT(token);
 
   // 3. Smart Routing
   if (userData && userData.role === "ADMIN") {
-      showToast("Admin Uplink Established.", false);
-      switchView("sellerDashboard");
-      setupSellerDashboard();
+    showToast("Admin Uplink Established.", false);
+    switchView("sellerDashboard");
+    setupSellerDashboard();
   } else {
-      switchView("home");
+    switchView("home");
   }
-  
+
   // 4. Refresh cart for standard users
   refreshCartData(handleRemoveFromCart);
 }
@@ -179,7 +181,7 @@ async function handleRemoveFromCart(cartItemId) {
   try {
     await removeFromCartAPI(cartItemId);
     showToast("Item removed from anthology.");
-    await refreshCartData(handleRemoveFromCart); 
+    await refreshCartData(handleRemoveFromCart);
   } catch (error) {
     showToast("Failed to remove item.", true);
   }
@@ -189,10 +191,13 @@ async function handleAddToCart(productId) {
   try {
     await addToCartAPI(productId, 1);
     showToast("Added to anthology.");
-    refreshCartData(handleRemoveFromCart); 
+    refreshCartData(handleRemoveFromCart);
   } catch (error) {
-    
-    if (error.message.includes("expired") || error.message.includes("Unauthorized") || error.message.includes("No token found")) {
+    if (
+      error.message.includes("expired") ||
+      error.message.includes("Unauthorized") ||
+      error.message.includes("No token found")
+    ) {
       showToast("Please sign in to access your anthology.", true);
       switchView("auth"); // Instant redirect to login page
     } else {
@@ -204,7 +209,11 @@ async function handleAddToCart(productId) {
 async function handleViewProduct(productId) {
   switchView("productDetail");
   setTimeout(async () => {
-    await renderProductDetail("view-product-detail", productId, handleAddToCart);
+    await renderProductDetail(
+      "view-product-detail",
+      productId,
+      handleAddToCart,
+    );
   }, 400);
 }
 window.handleViewProduct = handleViewProduct;
@@ -219,7 +228,7 @@ async function goToCheckout() {
     const cartItems = await getCartAPI();
     if (!cartItems || cartItems.length === 0) {
       showToast("Your anthology is empty. Please add items to proceed.", true);
-      return; 
+      return;
     }
     switchView("checkout");
     await populateCheckoutSummary();
@@ -229,14 +238,17 @@ async function goToCheckout() {
 }
 
 export function initScrollObserver() {
-  const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver(
+    (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("active");
           observer.unobserve(entry.target);
         }
       });
-    }, { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    },
+    { root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+  );
 
   document.querySelectorAll(".reveal-up").forEach((el) => observer.observe(el));
 }
@@ -245,32 +257,39 @@ export function initScrollObserver() {
 // INITIALIZATION & EVENT LISTENERS
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-
   // Initialize all pages
   await renderHome("view-home", handleAddToCart);
   await renderShop("view-shop", handleAddToCart, handleViewProduct);
-  await renderCart("view-cart", handleRemoveFromCart, goToCheckout); 
+  await renderCart("view-cart", handleRemoveFromCart, goToCheckout);
   await renderCheckout("view-checkout", handleRemoveFromCart);
   renderAuth("view-auth", handleAuthSuccess);
   renderProfile("view-profile", handleLogout);
   renderAbout("view-about");
   renderOrderSuccess("view-order-success");
-  
-  
+
+  window.openLegal = (type) => {
+    renderLegalPages("view-legal", type);
+    switchView("legal");
+  };
+
   // Init new Seller Dashboard if it exists
   initSearch(handleViewProduct);
 
-  window.addEventListener("go-to-shop", () => switchView("shop")); 
+  window.addEventListener("go-to-shop", () => switchView("shop"));
 
   updateNavUI();
   if (localStorage.getItem("token")) {
-    try { await refreshCartData(handleRemoveFromCart); } catch (err) { switchView("auth"); }
+    try {
+      await refreshCartData(handleRemoveFromCart);
+    } catch (err) {
+      switchView("auth");
+    }
   }
 
   document.getElementById("nav-back")?.addEventListener("click", () => {
     if (historyStack.length > 0) {
       const previousView = historyStack.pop();
-      switchView(previousView, true); 
+      switchView(previousView, true);
     }
   });
 
@@ -279,15 +298,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   navBtns.home?.addEventListener("click", () => switchView("home"));
   navBtns.shop?.addEventListener("click", () => switchView("shop"));
   navBtns.about?.addEventListener("click", () => switchView("about"));
-  
-document.getElementById('nav-dashboard')?.addEventListener("click", async () => {
-    switchView("sellerDashboard");
-    await setupSellerDashboard();
-});
-  
+
+  document
+    .getElementById("nav-dashboard")
+    ?.addEventListener("click", async () => {
+      switchView("sellerDashboard");
+      await setupSellerDashboard();
+    });
+
   navBtns.cart?.addEventListener("click", async () => {
     switchView("cart");
-    try { await refreshCartData(handleRemoveFromCart); } catch (err) { /* ignore */ }
+    try {
+      await refreshCartData(handleRemoveFromCart);
+    } catch (err) {
+      /* ignore */
+    }
   });
 
   navBtns.profile?.addEventListener("click", async () => {
@@ -301,23 +326,23 @@ document.getElementById('nav-dashboard')?.addEventListener("click", async () => 
   });
 
   // Admin / Ghost Door Events
-  window.addEventListener('exit-admin-flow', () => {
-      document.querySelector(".navbar").style.display = 'flex'; 
-      switchView('home');
+  window.addEventListener("exit-admin-flow", () => {
+    document.querySelector(".navbar").style.display = "flex";
+    switchView("home");
   });
 
-  document.getElementById('admin-exit')?.addEventListener('click', () => {
-      document.querySelector(".navbar").style.display = 'flex'; 
-      showToast("Session terminated.");
-      switchView('home');
+  document.getElementById("admin-exit")?.addEventListener("click", () => {
+    document.querySelector(".navbar").style.display = "flex";
+    showToast("Session terminated.");
+    switchView("home");
   });
 });
 
 // Global Listeners
 window.addEventListener("auth-expired", () => {
-  updateNavUI(); 
+  updateNavUI();
   document.getElementById("cart-count").innerText = "0";
-  switchView("auth"); 
+  switchView("auth");
   showToast("Session expired. Please sign in again.", true);
 });
 
