@@ -1,138 +1,229 @@
 # Zenith | Cinematic Essentials
 
 <p align="center">
-  <img src="./assets/logo-navbar.png" alt="Zenith Logo" width="300" />
+  <img src="./assets/logo-navbar.png" alt="Zenith Logo" width="280" />
 </p>
 
-> **Zenith** is a full-stack, single-page e-commerce anthology designed around a "silent luxury" and archival aesthetic. Built using a decoupled architecture, Zenith pairs a high-performance Vanilla JavaScript frontend with an enterprise-grade Java Spring Boot REST backend.
+<p align="center">
+  A cinematic e-commerce experience built around minimal design, curated collections, and seamless shopping functionality.
+</p>
 
 ---
 
-## 🌟 Key Features
+## Overview
 
-* **Cinematic Minimalist UI:** Built with Vanilla JavaScript modules and Tailwind CSS for hardware-accelerated animations, scroll-reveals, and high-fidelity rendering without heavy frontend frameworks.
-* **Stateless JWT Authentication:** Secure role-based access control (`CUSTOMER` and `ADMIN`) using JSON Web Tokens.
-* **Dynamic Gallery & Catalog:** Real-time search, sorting, detailed product views, and category filtering.
-* **Integrated Merchant Checkout:** Seamless payment workflows using the Razorpay SDK alongside traditional Cash on Delivery options.
-* **Cloud-Native Media Storage:** Integrated with Cloudinary API for optimized, instant image delivery and dynamic uploads.
-* **Seller / Admin Dashboard:** Administrative control panel for inventory metrics, real-time sales reporting (Chart.js integration), and order fulfillment tracking.
-* **Single-Page Application (SPA) Engine:** Custom lightweight routing logic managing dynamic DOM transitions without full page reloads.
+**Zenith** is a full-stack e-commerce marketplace featuring a minimalist storefront and a dedicated administrative dashboard.
 
----
+The frontend is built using HTML, CSS, and Vanilla JavaScript with ES6 modules. It communicates with a separate Java Spring Boot backend through REST APIs.
 
-## 🛠️ Technology Stack
+The interface follows a cinematic, archival-inspired visual direction, combining dark backgrounds, subtle animations, and elegant typography.
 
-### Backend
-* **Language & Framework:** Java 17+, Spring Boot
-* **Security:** Spring Security, Stateless JWT
-* **Persistence & DB:** Spring Data JPA, Hibernate, MySQL Database
-* **Media Management:** Cloudinary Java SDK
-* **Build Tool:** Maven
+## Features
+
+### Storefront
+- Cinematic homepage and product collections.
+- Product listings and detailed product pages.
+- Product search functionality.
+- Responsive navigation.
+- About and informational pages.
+
+### User Authentication
+- User registration and login.
+- JWT-based authentication.
+- Session handling using browser local storage.
+- Automatic handling of expired authentication sessions.
+- User profile management.
+
+### Shopping Cart
+- Add products to the cart.
+- View cart items and quantities.
+- Remove products from the cart.
+- Dynamic cart count updates.
+- Cart synchronization with the backend.
+
+### Checkout & Payments
+- Dedicated checkout interface.
+- Shipping information collection.
+- Razorpay payment integration.
+- Credit/debit card and UPI payment options through Razorpay.
+- Cash on Delivery option.
+- Payment verification through the backend.
+- Order confirmation screen.
+
+### Customer Account
+- View profile information.
+- Access order history.
+- Track order information.
+- Manage account sessions.
+
+### Admin / Seller Dashboard
+- Dashboard overview and statistics.
+- Inventory management.
+- Product addition and deletion.
+- Order management.
+- Order fulfillment status updates.
+- Administrative access based on user roles.
+
+### Additional Pages
+- About / The Heritage.
+- Search results.
+- Order success.
+- Order tracking.
+- Shipping and returns information.
+- Privacy policy.
+- Terms of service.
+- Contact information.
+
+## Technology Stack
 
 ### Frontend
-* **Core Technology:** Vanilla JavaScript (ES6 Modules)
-* **Styling:** Tailwind CSS, Custom CSS Variables & Animations
-* **SDKs & Libraries:** Razorpay Checkout SDK, Chart.js
 
----
+| Technology | Purpose |
+|---|---|
+| HTML5 | Application structure |
+| CSS3 | Styling and responsive layouts |
+| JavaScript (ES6+) | Application logic |
+| Tailwind CSS CDN | Utility-based styling |
+| Razorpay Checkout SDK | Payment interface |
+| Chart.js | Dashboard chart functionality |
+| Google Fonts | Typography |
 
-## 🏗️ Architecture & Project Structure
+### Backend Integration
 
-Zenith follows a strictly decoupled layered architecture.
+| Technology | Purpose |
+|---|---|
+| Java 17 | Backend language |
+| Spring Boot | REST API framework |
+| Spring Security | Authentication and authorization |
+| JWT | Token-based authentication |
+| Spring Data JPA | Database access |
+| MySQL | Data persistence |
+| Cloudinary | Product image storage |
+| Razorpay | Payment processing |
+
+## Architecture
+
+Zenith follows a decoupled frontend-backend architecture.
+
+- The frontend handles the user interface, navigation, interactions, and API communication.
+- The backend manages authentication, business logic, database operations, product management, orders, and payment verification.
+- The two repositories communicate through REST APIs.
+
+## Project Structure
 
 ```text
-Zenith/
-├── backend/
-│   └── src/main/java/com/zenith/
-│       ├── config/          # Spring Security, CORS, JWT Filters
-│       ├── controllers/     # REST Endpoints (Auth, Products, Cart, Orders)
-│       ├── dto/             # Data Transfer Objects
-│       ├── models/          # JPA Entities (User, Product, Order, OrderItem)
-│       ├── repositories/    # Spring Data JPA interfaces
-│       └── services/        # Business logic & payment processing
+zenith-frontend/
 │
-└── frontend/
-    ├── index.html           # Single entry point
-    ├── css/
-    │   └── style.css        # Global luxury styles & media queries
-    ├── js/
-    │   ├── app.js           # Main application controller & router
-    │   └── api.js           # Centralized fetch client with Auth headers
-    └── pages/               # Modular view renderers
-        ├── home.js
-        ├── shop.js
-        ├── cart.js
-        ├── checkout.js
-        ├── sellerDashboard.js
-        └── legal.js
+├── assets/
+│   ├── logo-navbar.png
+│   ├── logo-favicon.png
+│   └── products/
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   ├── api.js
+│   ├── app.js
+│   └── cart.js
+│
+├── pages/
+│   ├── about.js
+│   ├── admin.js
+│   ├── auth.js
+│   ├── cart.js
+│   ├── checkout.js
+│   ├── home.js
+│   ├── legal.js
+│   ├── orderSuccess.js
+│   ├── product.js
+│   ├── profile.js
+│   ├── search.js
+│   ├── sellerDashboard.js
+│   ├── shop.js
+│   └── trackOrder.js
+│
+└── index.html
 ```
 
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-* Java Development Kit (JDK 17 or higher)
-* MySQL Server
-* Maven
-* Node.js / Live Server (optional, for frontend static serving)
+
+- A modern web browser.
+- Git.
+- A local static web server, such as VS Code Live Server.
+- The Zenith backend running locally or accessible through its deployed API.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Ishaan-2589/zenith-frontend.git
+cd zenith-frontend
+```
+
+### 2. Configure the Backend URL
+
+Open:
+
+```text
+js/api.js
+```
+
+The application already switches between the local backend and deployed backend based on the hostname.
+
+```javascript
+const isLocalhost =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
+
+const API_BASE_URL = isLocalhost
+  ? "http://localhost:8080/api"
+  : "https://zenith-backend-inch.onrender.com/api";
+```
+
+For local development, ensure the backend is running on port `8080`.
+
+### 3. Run the Frontend
+
+You can use the VS Code Live Server extension:
+
+1. Open the project folder in VS Code.
+2. Open `index.html`.
+3. Right-click and select **Open with Live Server**.
+
+Alternatively, use another static HTTP server.
+
+The frontend will be accessible at the local address provided by your server.
+
+## Backend Repository
+
+The frontend requires the separate Zenith backend for authentication, product data, cart operations, order management, and payment processing.
+
+**Backend Repository:**  
+[https://github.com/Ishaan-2589/zenith-backend](https://github.com/Ishaan-2589/zenith-backend)
+
+## Deployment
+
+The frontend can be hosted using any static website hosting service.
+
+The current API configuration points non-localhost environments to the deployed Zenith backend hosted on Render.
+
+For a working deployment, ensure:
+- The backend service is running.
+- Database credentials are configured.
+- External service credentials are configured.
+- Backend CORS settings permit the frontend origin.
+- Razorpay credentials are configured appropriately.
+
+## Future Improvements
+
+- Expanded mobile and responsive refinements.
+- Customer reviews and ratings.
+- Enhanced product filtering.
+- Improved order tracking.
+- Additional storefront and dashboard functionality.
 
 ---
 
-### Backend Setup
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/your-username/zenith-ecommerce.git
-   cd zenith-ecommerce/backend
-   ```
-
-2. **Configure Database & Secrets:**
-   Update `src/main/resources/application.properties` with your database and Cloudinary credentials:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/zenith_db?createDatabaseIfNotExist=true
-   spring.datasource.username=YOUR_DB_USER
-   spring.datasource.password=YOUR_DB_PASSWORD
-   spring.jpa.hibernate.ddl-auto=update
-
-   # JWT Configuration
-   jwt.secret=YOUR_64_CHARACTER_SECRET_KEY
-
-   # Cloudinary Setup
-   cloudinary.cloud_name=YOUR_CLOUD_NAME
-   cloudinary.api_key=YOUR_API_KEY
-   cloudinary.api_secret=YOUR_API_SECRET
-   ```
-
-3. **Run the Backend:**
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-   The backend API will run at `http://localhost:8080/api`.
-
----
-
-### Frontend Setup
-
-1. **Navigate to Frontend Directory:**
-   ```bash
-   cd ../frontend
-   ```
-
-2. **Run via Live Server:**
-   Launch `index.html` using VS Code's **Live Server** plugin or any static web server running on `http://127.0.0.1:5500`.
-
----
-
-## 🔒 Known Limitations & Roadmap
-
-* **Mobile Optimizations:** While fully responsive, complex archival grids are best experienced on desktop displays.
-* **External Image Assets:** Product media utilizes external CDN endpoints; broken links may occur if remote assets are modified.
-* **Social Proofing:** Customer reviews and rating modules are currently planned for upcoming releases.
-* **Real-Time Logistics:** Order status updates reflect database milestones rather than live GPS carrier integration.
-
----
-
-## 📄 License
-
-This project is created for educational and archival portfolio purposes. All proprietary implementations remain the intellectual property of the project developer.
+**Zenith — Cinematic Essentials.**
